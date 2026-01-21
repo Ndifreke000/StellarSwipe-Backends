@@ -5,6 +5,8 @@ import { stellarConfig } from './config/stellar.config';
 import { databaseConfig, redisConfig } from './config/database.config';
 import { appConfig } from './config/app.config';
 import { StellarConfigService } from './config/stellar.service';
+import { LoggerModule } from './common/logger';
+import { SentryModule } from './common/sentry';
 import { BetaModule } from './beta/beta.module';
 import { TradesModule } from './trades/trades.module';
 
@@ -17,6 +19,10 @@ import { TradesModule } from './trades/trades.module';
       envFilePath: '.env',
       cache: true,
     }),
+    // Logger Module - Winston-based structured logging
+    LoggerModule,
+    // Sentry Module - Error tracking
+    SentryModule,
     // Database Module
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -43,4 +49,4 @@ import { TradesModule } from './trades/trades.module';
   providers: [StellarConfigService],
   exports: [StellarConfigService],
 })
-export class AppModule {}
+export class AppModule { }
