@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as Sentry from '@sentry/node';
-import { ProfilingIntegration } from '@sentry/profiling-node';
+import { nodeProfilingIntegration } from '@sentry/profiling-node';
 
 /**
  * Sentry error tracking service
@@ -41,7 +41,7 @@ export class SentryService {
       dsn,
       environment,
       tracesSampleRate,
-      integrations: [new ProfilingIntegration()],
+      integrations: [nodeProfilingIntegration()],
       // Don't send sensitive data
       beforeSend(event: Sentry.ErrorEvent) {
         // Remove sensitive headers

@@ -9,6 +9,7 @@ import { LoggerModule } from './common/logger';
 import { SentryModule } from './common/sentry';
 import { BetaModule } from './beta/beta.module';
 import { TradesModule } from './trades/trades.module';
+import { HealthController } from './health/health.controller';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { TradesModule } from './trades/trades.module';
     BetaModule,
     TradesModule,
   ],
+  controllers: [HealthController],
   providers: [StellarConfigService],
   exports: [StellarConfigService],
 })
