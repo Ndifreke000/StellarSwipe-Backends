@@ -11,6 +11,7 @@ import { SentryModule } from './common/sentry';
 import { BetaModule } from './beta/beta.module';
 import { TradesModule } from './trades/trades.module';
 import { RiskManagerModule } from './risk/risk-manager.module';
+import { PortfolioModule } from './portfolio/portfolio.module';
 import { configSchema } from './config/schemas/config.schema';
 import configuration from './config/configuration';
 import { HealthController } from './health/health.controller';
@@ -67,6 +68,7 @@ import { HealthController } from './health/health.controller';
     BetaModule,
     TradesModule,
     RiskManagerModule,
+    PortfolioModule,
   ],
   controllers: [HealthController],
   providers: [StellarConfigService],
