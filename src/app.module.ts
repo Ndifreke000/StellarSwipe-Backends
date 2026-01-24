@@ -26,7 +26,15 @@ import { CacheModule } from './cache/cache.module';
 import { redisCacheConfig } from './config/redis.config';
 import { SorobanModule } from './soroban/soroban.module';
 import { SdexModule } from './sdex/sdex.module';
+ main
 import { StellarModule } from './stellar/stellar.module';
+
+ dash
+import { DashboardModule } from './dashboard/dashboard.module';
+
+import { AuthModule } from './auth/auth.module';
+ main
+ main
 
 @Module({
   imports: [
@@ -99,14 +107,16 @@ import { StellarModule } from './stellar/stellar.module';
     TradesModule,
     RiskManagerModule,
     PortfolioModule,
+    DashboardModule,
     AiValidationModule,
     HealthModule,
     SdexModule,
     SorobanModule,
     StellarModule,
     CacheModule,
+    AuthModule,
   ],
   providers: [StellarConfigService],
   exports: [StellarConfigService],
 })
-export class AppModule {}
+export class AppModule { }
