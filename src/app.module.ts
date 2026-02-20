@@ -38,6 +38,7 @@ import { WebsocketModule } from './websocket/websocket.module';
 import { I18nModule as LocalI18nModule } from './i18n/i18n.module';
 import { I18nMiddleware } from './i18n/i18n.middleware';
 import { MentorshipModule } from './mentorship/mentorship.module';
+import { ProvidersModule } from './providers/providers.module';
 
 
 @Module({
@@ -127,6 +128,7 @@ import { MentorshipModule } from './mentorship/mentorship.module';
     WebsocketModule,
     LocalI18nModule,
     MentorshipModule,
+    ProvidersModule,
   ],
   providers: [StellarConfigService],
   exports: [StellarConfigService],
