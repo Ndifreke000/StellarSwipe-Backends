@@ -29,6 +29,7 @@ import { SdexModule } from './sdex/sdex.module';
 import { StellarModule } from './stellar/stellar.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { RatingsModule } from './ratings/ratings.module';
+import { ComplianceModule } from './compliance/compliance.module';
 import { AuthModule } from './auth/auth.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { WebsocketModule } from './websocket/websocket.module';
@@ -108,6 +109,7 @@ import { I18nMiddleware } from './i18n/i18n.middleware';
     PortfolioModule,
     DashboardModule,
     RatingsModule,
+    ComplianceModule,
     AnalyticsModule,
     AiValidationModule,
     HealthModule,
