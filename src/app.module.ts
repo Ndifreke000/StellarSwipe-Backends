@@ -41,6 +41,7 @@ import { MentorshipModule } from './mentorship/mentorship.module';
 import { ProvidersModule } from './providers/providers.module';
 import { MlModule } from './ml/ml.module';
 import { ValidationModule } from './common/validation/validation.module';
+import { ScalingModule } from './scaling/scaling.module';
 
 
 @Module({
@@ -132,6 +133,7 @@ import { ValidationModule } from './common/validation/validation.module';
     MentorshipModule,
     ProvidersModule,
     MlModule,
+    ScalingModule,
   ],
   providers: [StellarConfigService],
   exports: [StellarConfigService],
