@@ -108,6 +108,13 @@ export class Trade {
   @Column({ name: 'closed_at', type: 'timestamp', nullable: true })
   closedAt?: Date;
 
+  @Column({ name: 'parent_trade_id', type: 'uuid', nullable: true })
+  @Index()
+  parentTradeId?: string;
+
+  @Column({ name: 'original_amount', type: 'decimal', precision: 18, scale: 8, nullable: true })
+  originalAmount?: string;
+
   @Column({ type: 'jsonb', nullable: true })
   metadata?: Record<string, unknown>;
 

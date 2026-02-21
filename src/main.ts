@@ -1,8 +1,8 @@
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { ConfigService } from "@nestjs/config";
-import { ValidationPipe } from "@nestjs/common";
 import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
+import * as compression from 'compression';
 import { AppModule } from "./app.module";
 import { GlobalExceptionFilter } from "./common/filters";
 import {
@@ -11,6 +11,10 @@ import {
 } from './common/interceptors';
 import { LoggerService } from './common/logger';
 import { SentryService } from './common/sentry';
+import { SanitizationPipe } from './common/pipes';
+import { RedisIoAdapter } from './websocket/adapters/redis-io.adapter';
+import { InstanceCoordinatorService } from './scaling/instance-coordinator.service';
+import { compressionConfig } from './common/config/compression.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -47,8 +51,12 @@ async function bootstrap() {
     credentials: corsCredentials,
   });
 
+  // Enable compression
+  app.use((compression as any)(compressionConfig));
+
   // Global pipes
   app.useGlobalPipes(
+    new SanitizationPipe(),
     new I18nValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
@@ -58,6 +66,15 @@ async function bootstrap() {
       },
     }),
   );
+
+  // Redis Adapter for WebSockets
+  const redisIoAdapter = new RedisIoAdapter(app, configService);
+  await redisIoAdapter.connectToRedis();
+  app.useWebSocketAdapter(redisIoAdapter);
+
+  // Instance Identification in Logs
+  const instanceCoordinator = app.get(InstanceCoordinatorService);
+  logger.info(`Application started on instance: ${instanceCoordinator.getInstanceId()}`);
 
   // Global filters
   app.useGlobalFilters(

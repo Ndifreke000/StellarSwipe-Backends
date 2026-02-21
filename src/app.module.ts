@@ -26,6 +26,7 @@ import { CacheModule } from './cache/cache.module';
 import { redisCacheConfig } from './config/redis.config';
 import { SorobanModule } from './soroban/soroban.module';
 import { SdexModule } from './sdex/sdex.module';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { StellarModule } from './stellar/stellar.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { RatingsModule } from './ratings/ratings.module';
@@ -36,7 +37,12 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { WebsocketModule } from './websocket/websocket.module';
 import { I18nModule as LocalI18nModule } from './i18n/i18n.module';
 import { I18nMiddleware } from './i18n/i18n.middleware';
-import { FeatureFlagsModule } from './feature-flags/feature-flags.module';
+import { MentorshipModule } from './mentorship/mentorship.module';
+import { ProvidersModule } from './providers/providers.module';
+import { MlModule } from './ml/ml.module';
+import { ValidationModule } from './common/validation/validation.module';
+import { ScalingModule } from './scaling/scaling.module';
+
 
 @Module({
   imports: [
@@ -120,10 +126,14 @@ import { FeatureFlagsModule } from './feature-flags/feature-flags.module';
     SorobanModule,
     StellarModule,
     CacheModule,
+    SubscriptionsModule,
     AuthModule,
     WebsocketModule,
     LocalI18nModule,
-    FeatureFlagsModule,
+    MentorshipModule,
+    ProvidersModule,
+    MlModule,
+    ScalingModule,
   ],
   providers: [StellarConfigService],
   exports: [StellarConfigService],
