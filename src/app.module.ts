@@ -2,43 +2,34 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bull';
+ feature/swipe-124
 // import { CacheModule } from '@nestjs/cache-manager';
 import { stellarConfig } from './config/stellar.config';
 import { databaseConfig, redisConfig } from './config/database.config';
+import { connectionPoolConfig } from './database/config/connection-pool.config';
 import { xaiConfig } from './config/xai.config';
+=======
+
+ main
 import { appConfig, sentryConfig } from './config/app.config';
+import { databaseConfig, redisConfig } from './config/database.config';
 import { jwtConfig } from './config/jwt.config';
+import { redisCacheConfig } from './config/redis.config';
+import { stellarConfig } from './config/stellar.config';
+import { xaiConfig } from './config/xai.config';
+import configuration from './config/configuration';
+import { configSchema } from './config/schemas/config.schema';
 import { StellarConfigService } from './config/stellar.service';
+
 import { LoggerModule } from './common/logger';
 import { SentryModule } from './common/sentry';
-import { BetaModule } from './beta/beta.module';
-import { TradesModule } from './trades/trades.module';
-import { RiskManagerModule } from './risk/risk-manager.module';
-import { PortfolioModule } from './portfolio/portfolio.module';
-import { SignalsModule } from './signals/signals.module';
-import { AiValidationModule } from './ai-validation/ai-validation.module';
-import { UsersModule } from './users/users.module';
-import { AssetsModule } from './assets/assets.module';
-import { configSchema } from './config/schemas/config.schema';
-import configuration from './config/configuration';
-import { HealthModule } from './health/health.module';
 import { CacheModule } from './cache/cache.module';
-import { redisCacheConfig } from './config/redis.config';
-import { SorobanModule } from './soroban/soroban.module';
-import { SdexModule } from './sdex/sdex.module';
-import { SubscriptionsModule } from './subscriptions/subscriptions.module';
-import { StellarModule } from './stellar/stellar.module';
-import { DashboardModule } from './dashboard/dashboard.module';
-import { RatingsModule } from './ratings/ratings.module';
-import { ComplianceModule } from './compliance/compliance.module';
-import { RateLimitModule } from './common/rate-limit.module';
 import { AuthModule } from './auth/auth.module';
-import { AnalyticsModule } from './analytics/analytics.module';
-import { WebsocketModule } from './websocket/websocket.module';
-import { I18nModule as LocalI18nModule } from './i18n/i18n.module';
-import { I18nMiddleware } from './i18n/i18n.middleware';
-import { MentorshipModule } from './mentorship/mentorship.module';
+import { UsersModule } from './users/users.module';
+import { SignalsModule } from './signals/signals.module';
+import { TradesModule } from './trades/trades.module';
 import { ProvidersModule } from './providers/providers.module';
+ feature/swipe-103-stellar
 import { MlModule } from './ml/ml.module';
 import { ValidationModule } from './common/validation/validation.module';
 import { ScalingModule } from './scaling/scaling.module';
@@ -48,7 +39,6 @@ import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
-    // Configuration Module - loads environment variables with validation
     ConfigModule.forRoot({
       isGlobal: true,
       load: [
@@ -60,12 +50,10 @@ import { EventsModule } from './events/events.module';
         redisCacheConfig,
         jwtConfig,
         xaiConfig,
+        connectionPoolConfig,
         configuration,
       ],
-      envFilePath: [
-        `.env.${process.env.NODE_ENV || 'development'}`,
-        '.env',
-      ],
+      envFilePath: [`.env.${process.env.NODE_ENV || 'development'}`, '.env'],
       cache: true,
       validationSchema: configSchema,
       validationOptions: {
@@ -73,7 +61,6 @@ import { EventsModule } from './events/events.module';
         abortEarly: false,
       },
     }),
-    // Feature Modules
     BullModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -86,11 +73,12 @@ import { EventsModule } from './events/events.module';
         },
       }),
     }),
-    // Logger Module - Winston-based structured logging
     LoggerModule,
-    // Sentry Module - Error tracking
     SentryModule,
-    // Database Module
+ feature/swipe-124
+    // Database Module with Connection Pool (min: 10, max: 30)
+=======
+ main
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -107,33 +95,34 @@ import { EventsModule } from './events/events.module';
         migrations: ['dist/migrations/*{.ts,.js}'],
         subscribers: ['dist/subscribers/*{.ts,.js}'],
         ssl: configService.get<boolean>('database.ssl') ?? false,
+        // Connection Pool Configuration (min: 10, max: 30 for 10k+ users)
+        extra: {
+          min: parseInt(process.env.DATABASE_POOL_MIN || '10', 10),
+          max: parseInt(process.env.DATABASE_POOL_MAX || '30', 10),
+          idleTimeoutMillis: parseInt(
+            process.env.DATABASE_POOL_IDLE_TIMEOUT || '30000',
+            10,
+          ),
+          connectionTimeoutMillis: parseInt(
+            process.env.DATABASE_POOL_CONNECTION_TIMEOUT || '2000',
+            10,
+          ),
+        },
       }),
     }),
+ feature/swipe-124
+    // Database Optimization Module
+    DatabaseOptimizationModule,
     // Feature Modules
+=======
+ main
     UsersModule,
     SignalsModule,
-    AssetsModule,
-    BetaModule,
     TradesModule,
-    RiskManagerModule,
-    PortfolioModule,
-    DashboardModule,
-    RatingsModule,
-    ComplianceModule,
-    RateLimitModule,
-    AnalyticsModule,
-    AiValidationModule,
-    HealthModule,
-    SdexModule,
-    SorobanModule,
-    StellarModule,
     CacheModule,
-    SubscriptionsModule,
     AuthModule,
-    WebsocketModule,
-    LocalI18nModule,
-    MentorshipModule,
     ProvidersModule,
+ feature/swipe-103-stellar
     MlModule,
     ScalingModule,
     ReferralsModule,
@@ -142,8 +131,4 @@ import { EventsModule } from './events/events.module';
   providers: [StellarConfigService],
   exports: [StellarConfigService],
 })
-export class AppModule {
-  configure(consumer: import('@nestjs/common').MiddlewareConsumer) {
-    consumer.apply(I18nMiddleware).forRoutes('*');
-  }
-}
+export class AppModule {}
